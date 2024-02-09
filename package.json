@@ -1,0 +1,22 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "Learning node, express and mongoDB",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glaucodesouza/api-nodejs-natours.git"
+  },
+  "author": "Glauco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/glaucodesouza/api-nodejs-natours/issues"
+  },
+  "homepage": "https://github.com/glaucodesouza/api-nodejs-natours#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
