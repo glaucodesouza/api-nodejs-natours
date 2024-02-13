@@ -1,8 +1,16 @@
 const fs = require('fs');
 const express = require('express'); //requiring express module
+const morgan = require('morgan');
 
 const app = express(); //app variable for express
+//----------------------------------------------------------------
+// 1) MIDDLEWARERS
+//----------------------------------------------------------------
+app.use(morgan('dev'));
+app.use(morgan('tiny'));
+
 app.use(express.json()); //middleware that executes in the middle of processing a request
+
 app.use((req, res, next) => {
   console.log('Hello from the middleware 👋🏻');
   next();
@@ -19,8 +27,10 @@ const tours = JSON.parse(
 );
 
 //----------------------------------------------------------------
-// GET Tours (Get all tours)
+// 2) ROUTE HANDDLERS
 //----------------------------------------------------------------
+
+// GET Tours (Get all tours)
 const getAllTours = (req, res) => {
   console.log(req.requestTime);
   res.status(200).json({
@@ -33,9 +43,7 @@ const getAllTours = (req, res) => {
   });
 };
 
-//----------------------------------------------------------------
 // GET Tour (Get tour)
-//----------------------------------------------------------------
 const getTour = (req, res) => {
   console.log(req.params);
   const id = req.params.id * 1; //=====>trick in Javascript to format string to integer
@@ -56,9 +64,8 @@ const getTour = (req, res) => {
     },
   });
 };
-//----------------------------------------------------------------
+
 // POST for /api/v1/tours (Create Tour)
-//----------------------------------------------------------------
 const createTour = (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
@@ -80,9 +87,7 @@ const createTour = (req, res) => {
   );
 };
 
-//----------------------------------------------------------------
 // PATCH (Update Tour)
-//----------------------------------------------------------------
 const updateTour = (req, res) => {
   if (req.params.id * 1 > tours.length) {
     //multiply by 1, to turn it Integer
@@ -99,9 +104,8 @@ const updateTour = (req, res) => {
     },
   });
 };
-//----------------------------------------------------------------
+
 // DELETE Tour
-//----------------------------------------------------------------
 const deleteTour = (req, res) => {
   //multiply by 1, to turn it Integer
   if (req.params.id * 1 > tours.length) {
@@ -124,6 +128,9 @@ const deleteTour = (req, res) => {
 // app.patch("/api/v1/tours/:id", updateTour);
 // app.delete("/api/v1/tours/:id", deleteTour);
 
+//----------------------------------------------------------------
+// 3) ROUTES
+//----------------------------------------------------------------
 app
   .route('/api/v1/tours')
   .get(getAllTours)
@@ -136,7 +143,7 @@ app
   .delete(deleteTour);
 
 //----------------------------------------------------------------
-//Start Server
+// 4) START SERVER
 //----------------------------------------------------------------
 const port = 3000;
 app.listen(port, () => {
