@@ -69,7 +69,10 @@ const getTour = (req, res) => {
 const createTour = (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
+  const newTour = Object.assign(
+    { id: newId },
+    req.body
+  );
 
   tours.push(newTour);
 
@@ -160,32 +163,36 @@ const deleteUser = (req, res) => {
 //----------------------------------------------------------------
 // 3) ROUTES
 //----------------------------------------------------------------
+const tourRouter = express.Router();
+const userRouter = express.Router();
 
 // Tours
-app
-  .route('/api/v1/tours')
+tourRouter
+  .route('/')
   .get(getAllTours)
   .post(createTour);
 
-app
-  .route('/api/v1/tours/:id')
+tourRouter
+  .route('/:id')
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
 
 // Users
-app
-  .route('/api/v1/users')
+userRouter
+  .route('/')
   .get(getAllUsers)
   .post(createUser);
 
-app
-  .route('/api/v1/users/:id')
+userRouter
+  .route('/:id')
   .get(getUser)
   .get(getAllUsers)
   .patch(updateUser)
   .delete(deleteUser);
 
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
 //----------------------------------------------------------------
 // 4) START SERVER
 //----------------------------------------------------------------
