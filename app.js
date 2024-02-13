@@ -104,6 +104,25 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+//----------------------------------------------------------------
+// DELETE
+//----------------------------------------------------------------
+app.delete('/api/v1/tours/:id', (req, res) => {
+  //multiply by 1, to turn it Integer
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      error: 'Invalid ID',
+    });
+  }
+
+  //204 response is
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 //start server
 const port = 3000;
 app.listen(port, () => {
