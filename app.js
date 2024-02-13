@@ -36,6 +36,33 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+//----------------------------------------------------------------
+// GET /api/v1/tours
+//----------------------------------------------------------------
+app.get('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params);
+  const id = req.params.id * 1; //=====>trick in Javascript to format string to integer
+  const tour = tours.find((el) => el.id === id);
+
+  // if (id > tours.length) {
+  if (!tour) {
+    return res.status(404).json({
+      status: 'fail',
+      error: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
+
+//----------------------------------------------------------------
+// POST /api/v1/tours
+//----------------------------------------------------------------
 app.post('/api/v1/tours', (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
