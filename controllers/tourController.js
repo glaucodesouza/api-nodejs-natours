@@ -5,7 +5,8 @@ const tours = JSON.parse(
     `${__dirname}/../dev-data/data/tours-simple.json`
   )
 );
-
+// Middleware function for validating the ID of the Routes
+//It will run before CRUD methods...
 exports.checkID = (req, res, next, val) => {
   console.log(`Tour id is: ${val}`);
   //multiply by 1, to turn it Integer
@@ -16,6 +17,16 @@ exports.checkID = (req, res, next, val) => {
     });
   }
   next(); //go to next Middleware function...
+};
+
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Missing name and price',
+    });
+  }
+  next(); //go to next middleware function...
 };
 
 // GET Tours (Get all tours)
@@ -66,7 +77,7 @@ exports.createTour = (req, res) => {
   tours.push(newTour);
 
   fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
+    `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
     (err) => {
       res.status(201).json({
