@@ -9,7 +9,8 @@ const app = express(); //app variable for express
 // 1) MIDDLEWARERS
 //----------------------------------------------------------------
 app.use(morgan('dev'));
-app.use(morgan('tiny'));
+app.use(express.json());
+app.use(express.static(`${__dirname}/public`));
 
 app.use(express.json()); //middleware that executes in the middle of processing a request
 
