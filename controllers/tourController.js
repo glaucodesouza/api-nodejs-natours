@@ -6,6 +6,18 @@ const tours = JSON.parse(
   )
 );
 
+exports.checkID = (req, res, next, val) => {
+  console.log(`Tour id is: ${val}`);
+  //multiply by 1, to turn it Integer
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  next(); //go to next Middleware function...
+};
+
 // GET Tours (Get all tours)
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
@@ -25,13 +37,14 @@ exports.getTour = (req, res) => {
   const id = req.params.id * 1; //=====>trick in Javascript to format string to integer
   const tour = tours.find((el) => el.id === id);
 
-  // if (id > tours.length) {
-  if (!tour) {
-    return res.status(404).json({
-      status: 'fail',
-      error: 'Invalid ID',
-    });
-  }
+  // REPLACED by function put ABOVE the code...exports.checkID
+  // // if (id > tours.length) {
+  // if (!tour) {
+  //   return res.status(404).json({
+  //     status: 'fail',
+  //     message: 'Invalid ID',
+  //   });
+  // }
 
   res.status(200).json({
     status: 'success',
@@ -68,13 +81,14 @@ exports.createTour = (req, res) => {
 
 // PATCH (Update Tour)
 exports.updateTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    //multiply by 1, to turn it Integer
-    return res.status(404).json({
-      status: 'fail',
-      error: 'Invalid ID',
-    });
-  }
+  // REPLACED by function put ABOVE the code...exports.checkID
+  // if (req.params.id * 1 > tours.length) {
+  //   //multiply by 1, to turn it Integer
+  //   return res.status(404).json({
+  //     status: 'fail',
+  //     message: 'Invalid ID',
+  //   });
+  // }
 
   res.status(200).json({
     status: 'success',
@@ -86,17 +100,10 @@ exports.updateTour = (req, res) => {
 
 // DELETE Tour
 exports.deleteTour = (req, res) => {
-  //multiply by 1, to turn it Integer
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      error: 'Invalid ID',
-    });
-  }
-
-  //204 response is
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+  // REPLACED by function put ABOVE the code...exports.checkID
+  // //204 response is
+  // res.status(204).json({
+  //   status: 'success',
+  //   data: null,
+  // });
 };

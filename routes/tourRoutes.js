@@ -5,6 +5,13 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
+router.param('id', tourController.checkID);
+// REPLACED by above code ^^^, which is a function in tourController.js
+// router.param('id', (req, res, next, val) => {
+//   console.log(`Tour id is ${val}`);
+//   next();
+// });
+
 router
   .route('/')
   .get(tourController.getAllTours)
