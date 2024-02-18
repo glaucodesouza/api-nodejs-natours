@@ -1,38 +1,6 @@
 // const fs = require('fs');
 const Tour = require('./../models/tourModel');
 
-//commenting because it was for local testing purposes from json file
-// const tours = JSON.parse(
-//   fs.readFileSync(
-//     `${__dirname}/../dev-data/data/tours-simple.json`
-//   )
-// );
-
-// Commented out because it was for local testing purposes from json file
-// Middleware function for validating the ID of the Routes
-//It will run before CRUD methods...
-// exports.checkID = (req, res, next, val) => {
-//   console.log(`Tour id is: ${val}`);
-//   //multiply by 1, to turn it Integer
-//   if (req.params.id * 1 > tours.length) {
-//     return res.status(404).json({
-//       status: 'fail',
-//       message: 'Invalid ID'
-//     });
-//   }
-//   next(); //go to next Middleware function...
-// };
-
-exports.checkBody = (req, res, next) => {
-  if (!req.body.name || !req.body.price) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Missing name and price'
-    });
-  }
-  next(); //go to next middleware function...
-};
-
 // GET Tours (Get all tours)
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
@@ -50,68 +18,29 @@ exports.getAllTours = (req, res) => {
 exports.getTour = (req, res) => {
   console.log(req.params);
   const id = req.params.id * 1; //=====>trick in Javascript to format string to integer
-
-  // Commented because it was for local testing with a JSON local file
-  // const tour = tours.find(el => el.id === id);
-
-  // // REPLACED by function put ABOVE the code...exports.checkID
-  // // // if (id > tours.length) {
-  // // if (!tour) {
-  // //   return res.status(404).json({
-  // //     status: 'fail',
-  // //     message: 'Invalid ID',
-  // //   });
-  // // }
-
-  // res.status(200).json({
-  //   status: 'success',
-  //   data: {
-  //     tour
-  //   }
-  // });
 };
 
 // POST for /api/v1/tours (Create Tour)
-exports.createTour = (req, res) => {
-  res.status(201).json({
-    status: 'success'
-    // data: {
-    //   tour: newTour
-    // }
-  });
-  // comented because it was for local testing with a JSON local file
-  // // console.log(req.body);
-  // const newId = tours[tours.length - 1].id + 1;
-  // const newTour = Object.assign(
-  //   { id: newId },
-  //   req.body
-  // );
-  // tours.push(newTour);
-  // fs.writeFile(
-  //   `${__dirname}/../dev-data/data/tours-simple.json`,
-  //   JSON.stringify(tours),
-  //   err => {
-  //     res.status(201).json({
-  //       status: 'success',
-  //       data: {
-  //         tour: newTour
-  //       }
-  //     });
-  //   }
-  // );
+exports.createTour = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body); // Promise
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tour: newTour
+      }
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 // PATCH (Update Tour)
 exports.updateTour = (req, res) => {
-  // REPLACED by function put ABOVE the code...exports.checkID
-  // if (req.params.id * 1 > tours.length) {
-  //   //multiply by 1, to turn it Integer
-  //   return res.status(404).json({
-  //     status: 'fail',
-  //     message: 'Invalid ID',
-  //   });
-  // }
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -129,3 +58,138 @@ exports.deleteTour = (req, res) => {
   //   data: null,
   // });
 };
+
+// // const fs = require('fs');
+// const Tour = require('./../models/tourModel');
+
+// //commenting because it was for local testing purposes from json file
+// // const tours = JSON.parse(
+// //   fs.readFileSync(
+// //     `${__dirname}/../dev-data/data/tours-simple.json`
+// //   )
+// // );
+
+// // Commented out because it was for local testing purposes from json file
+// // Middleware function for validating the ID of the Routes
+// //It will run before CRUD methods...
+// // exports.checkID = (req, res, next, val) => {
+// //   console.log(`Tour id is: ${val}`);
+// //   //multiply by 1, to turn it Integer
+// //   if (req.params.id * 1 > tours.length) {
+// //     return res.status(404).json({
+// //       status: 'fail',
+// //       message: 'Invalid ID'
+// //     });
+// //   }
+// //   next(); //go to next Middleware function...
+// // };
+
+// // Commented out because it was for local testing purposes from json file
+// // exports.checkBody = (req, res, next) => {
+// //   if (!req.body.name || !req.body.price) {
+// //     return res.status(400).json({
+// //       status: 'fail',
+// //       message: 'Missing name and price'
+// //     });
+// //   }
+// //   next(); //go to next middleware function...
+// // };
+
+// // GET Tours (Get all tours)
+// exports.getAllTours = (req, res) => {
+//   console.log(req.requestTime);
+//   res.status(200).json({
+//     status: 'success',
+//     requestedAt: req.requestTime
+//     // results: tours.length,
+//     // data: {
+//     //   tours
+//     // }
+//   });
+// };
+
+// // GET Tour (Get tour)
+// exports.getTour = (req, res) => {
+//   console.log(req.params);
+//   const id = req.params.id * 1; //=====>trick in Javascript to format string to integer
+
+//   // Commented because it was for local testing with a JSON local file
+//   // const tour = tours.find(el => el.id === id);
+
+//   // // REPLACED by function put ABOVE the code...exports.checkID
+//   // // // if (id > tours.length) {
+//   // // if (!tour) {
+//   // //   return res.status(404).json({
+//   // //     status: 'fail',
+//   // //     message: 'Invalid ID',
+//   // //   });
+//   // // }
+
+//   // res.status(200).json({
+//   //   status: 'success',
+//   //   data: {
+//   //     tour
+//   //   }
+//   // });
+// };
+
+// // POST for /api/v1/tours (Create Tour)
+// exports.createTour = async (req, res) => {
+//   const newTour = await Tour.create(req.body);
+
+//   res.status(201).json({
+//     status: 'success'
+//     // data: {
+//     //   tour: newTour
+//     // }
+//   });
+//   // comented because it was for local testing with a JSON local file
+//   // // console.log(req.body);
+//   // const newId = tours[tours.length - 1].id + 1;
+//   // const newTour = Object.assign(
+//   //   { id: newId },
+//   //   req.body
+//   // );
+//   // tours.push(newTour);
+//   // fs.writeFile(
+//   //   `${__dirname}/../dev-data/data/tours-simple.json`,
+//   //   JSON.stringify(tours),
+//   //   err => {
+//   //     res.status(201).json({
+//   //       status: 'success',
+//   //       data: {
+//   //         tour: newTour
+//   //       }
+//   //     });
+//   //   }
+//   // );
+// };
+
+// // PATCH (Update Tour)
+// exports.updateTour = (req, res) => {
+//   // REPLACED by function put ABOVE the code...exports.checkID
+//   // if (req.params.id * 1 > tours.length) {
+//   //   //multiply by 1, to turn it Integer
+//   //   return res.status(404).json({
+//   //     status: 'fail',
+//   //     message: 'Invalid ID',
+//   //   });
+//   // }
+
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       tour: '<Updated tour here>'
+//     }
+//   });
+// };
+
+// // DELETE Tour
+// exports.deleteTour = (req, res) => {
+//   // REPLACED by function put ABOVE the code...exports.checkID
+//   // //204 response is
+//   // res.status(204).json({
+//   //   status: 'success',
+//   //   data: null,
+//   // });
+// };

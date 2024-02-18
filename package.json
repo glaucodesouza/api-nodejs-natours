@@ -17,6 +17,9 @@
     "url": "https://github.com/glaucodesouza/api-nodejs-natours/issues"
   },
   "homepage": "https://github.com/glaucodesouza/api-nodejs-natours#readme",
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "dependencies": {
     "dotenv": "^16.4.4",
     "express": "^4.18.2",
