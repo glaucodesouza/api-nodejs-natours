@@ -5,7 +5,9 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
-router.param('id', tourController.checkID); //just for Get, Update, Delete methods
+// Commented out because it was for local testing purposes
+// router.param('id', tourController.checkID); //just for Get, Update, Delete methods
+
 // REPLACED by above code ^^^, which is a function in tourController.js
 // router.param('id', (req, res, next, val) => {
 //   console.log(`Tour id is ${val}`);

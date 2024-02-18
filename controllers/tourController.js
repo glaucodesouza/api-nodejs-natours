@@ -1,29 +1,33 @@
-const fs = require('fs');
+// const fs = require('fs');
+const Tour = require('./../models/tourModel');
 
-const tours = JSON.parse(
-  fs.readFileSync(
-    `${__dirname}/../dev-data/data/tours-simple.json`
-  )
-);
+//commenting because it was for local testing purposes from json file
+// const tours = JSON.parse(
+//   fs.readFileSync(
+//     `${__dirname}/../dev-data/data/tours-simple.json`
+//   )
+// );
+
+// Commented out because it was for local testing purposes from json file
 // Middleware function for validating the ID of the Routes
 //It will run before CRUD methods...
-exports.checkID = (req, res, next, val) => {
-  console.log(`Tour id is: ${val}`);
-  //multiply by 1, to turn it Integer
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-  next(); //go to next Middleware function...
-};
+// exports.checkID = (req, res, next, val) => {
+//   console.log(`Tour id is: ${val}`);
+//   //multiply by 1, to turn it Integer
+//   if (req.params.id * 1 > tours.length) {
+//     return res.status(404).json({
+//       status: 'fail',
+//       message: 'Invalid ID'
+//     });
+//   }
+//   next(); //go to next Middleware function...
+// };
 
 exports.checkBody = (req, res, next) => {
   if (!req.body.name || !req.body.price) {
     return res.status(400).json({
       status: 'fail',
-      message: 'Missing name and price',
+      message: 'Missing name and price'
     });
   }
   next(); //go to next middleware function...
@@ -34,11 +38,11 @@ exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
-    requestedAt: req.requestTime,
-    results: tours.length,
-    data: {
-      tours,
-    },
+    requestedAt: req.requestTime
+    // results: tours.length,
+    // data: {
+    //   tours
+    // }
   });
 };
 
@@ -46,48 +50,55 @@ exports.getAllTours = (req, res) => {
 exports.getTour = (req, res) => {
   console.log(req.params);
   const id = req.params.id * 1; //=====>trick in Javascript to format string to integer
-  const tour = tours.find((el) => el.id === id);
 
-  // REPLACED by function put ABOVE the code...exports.checkID
-  // // if (id > tours.length) {
-  // if (!tour) {
-  //   return res.status(404).json({
-  //     status: 'fail',
-  //     message: 'Invalid ID',
-  //   });
-  // }
+  // Commented because it was for local testing with a JSON local file
+  // const tour = tours.find(el => el.id === id);
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
+  // // REPLACED by function put ABOVE the code...exports.checkID
+  // // // if (id > tours.length) {
+  // // if (!tour) {
+  // //   return res.status(404).json({
+  // //     status: 'fail',
+  // //     message: 'Invalid ID',
+  // //   });
+  // // }
+
+  // res.status(200).json({
+  //   status: 'success',
+  //   data: {
+  //     tour
+  //   }
+  // });
 };
 
 // POST for /api/v1/tours (Create Tour)
 exports.createTour = (req, res) => {
-  // console.log(req.body);
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign(
-    { id: newId },
-    req.body
-  );
-
-  tours.push(newTour);
-
-  fs.writeFile(
-    `${__dirname}/../dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
-    (err) => {
-      res.status(201).json({
-        status: 'success',
-        data: {
-          tour: newTour,
-        },
-      });
-    }
-  );
+  res.status(201).json({
+    status: 'success'
+    // data: {
+    //   tour: newTour
+    // }
+  });
+  // comented because it was for local testing with a JSON local file
+  // // console.log(req.body);
+  // const newId = tours[tours.length - 1].id + 1;
+  // const newTour = Object.assign(
+  //   { id: newId },
+  //   req.body
+  // );
+  // tours.push(newTour);
+  // fs.writeFile(
+  //   `${__dirname}/../dev-data/data/tours-simple.json`,
+  //   JSON.stringify(tours),
+  //   err => {
+  //     res.status(201).json({
+  //       status: 'success',
+  //       data: {
+  //         tour: newTour
+  //       }
+  //     });
+  //   }
+  // );
 };
 
 // PATCH (Update Tour)
@@ -104,8 +115,8 @@ exports.updateTour = (req, res) => {
   res.status(200).json({
     status: 'success',
     data: {
-      tour: '<Updated tour here>',
-    },
+      tour: '<Updated tour here>'
+    }
   });
 };
 

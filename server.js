@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 
 dotenv.config({ path: './config.env' });
 
@@ -29,42 +29,6 @@ mongoose
     console.log('DB connection successful!')
   )
   .catch(err => console.log(err));
-
-//----------------------------------------------------------------
-// mongoose Schema
-//----------------------------------------------------------------
-const tourSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'A tour must have a name'],
-    unique: true
-  },
-  rating: {
-    type: Number,
-    default: 4.5,
-    required: [
-      true,
-      'A tour must have a rating'
-    ]
-  },
-  price: {
-    type: Number,
-    required: [true, 'A tour must have a price']
-  }
-});
-
-const Tour = mongoose.model('Tour', tourSchema);
-
-const testTour = new Tour({
-  name: 'The Park Camper',
-  rating: 4.7,
-  price: 997
-});
-
-testTour
-  .save() //Promise to save document to the DB
-  .then(doc => console.log(doc))
-  .catch(err => console.log('ERROR 💥', err));
 
 // console.log(app.get('env')); //write environment variables on terminal
 // console.log(process.env); // write environment variables on terminal
