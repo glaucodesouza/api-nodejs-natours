@@ -7,12 +7,11 @@ const userRouter = require('./routes/userRoutes');
 const app = express(); //app variable for express
 //----------------------------------------------------------------
 // 1) MIDDLEWARERS
+// middleware that executes in the middle of processing a request
 //----------------------------------------------------------------
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
-
-app.use(express.json()); //middleware that executes in the middle of processing a request
 
 app.use((req, res, next) => {
   console.log('Hello from the middleware 👋🏻');
