@@ -2,22 +2,42 @@
 const Tour = require('./../models/tourModel');
 
 // GET Tours (Get all tours)
-exports.getAllTours = (req, res) => {
-  console.log(req.requestTime);
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime
-    // results: tours.length,
-    // data: {
-    //   tours
-    // }
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find(); //INFO: this command is to read all tours from table
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours
+      }
+    });
+  } catch (error) {
+    res
+      .status(404)
+      .json({ status: 'fail', message: error });
+  }
 };
 
 // GET Tour (Get tour)
-exports.getTour = (req, res) => {
-  console.log(req.params);
-  const id = req.params.id * 1; //=====>trick in Javascript to format string to integer
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(
+      req.params.id //INFO: 1)this id come from route file configuration and it will be informed in URL id parameter (.route(/:id))
+    );
+    // INFO: 2) For one, you could use: Tour.findOne({ _id: req.params.id })
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 // POST for /api/v1/tours (Create Tour)
@@ -40,23 +60,58 @@ exports.createTour = async (req, res) => {
 };
 
 // PATCH (Update Tour)
-exports.updateTour = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour: '<Updated tour here>'
-    }
-  });
+//INFO:
+// this function works only for PATCH method.
+// do not work for PUT method because we coauld fill up all fields when calling it.
+exports.updateTour = async (req, res) => {
+  try {
+    //INFO: lets use a mongose method (findByIdAndUpdate)
+    // which returns a mongose Query object.
+    const tour = await Tour.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+
+    //INFO: we also could use tour: tour
+    //but we can hide it because it has the same name (tour).
+    // res.status(200).json({
+    //   status: 'success',
+    //   data: {
+    //     tour: tour       <--------here
+    //   }
+    // });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 // DELETE Tour
-exports.deleteTour = (req, res) => {
-  // REPLACED by function put ABOVE the code...exports.checkID
-  // //204 response is
-  // res.status(204).json({
-  //   status: 'success',
-  //   data: null,
-  // });
+exports.deleteTour = async (req, res) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 // // const fs = require('fs');
