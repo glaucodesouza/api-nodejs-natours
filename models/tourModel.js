@@ -65,7 +65,8 @@ const tourSchema = new mongoose.Schema({
   images: [String], //INFO: an array of images
   createdAt: {
     type: Date,
-    default: Date.now() //INFO: timestamp in miliseconds, immediataly converty to day state
+    default: Date.now(), //INFO: timestamp in miliseconds, immediataly converty to day state
+    select: false //INFO:remove from selection, so we do not pass it to user in frontend
   },
   startDates: [Date]
 });
