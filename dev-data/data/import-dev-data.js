@@ -1,6 +1,7 @@
+const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv'); //INFO: need it for having environment variables for connections
-const app = require('./app');
+const Tour = require('./../../models/tourModel');
 
 dotenv.config({ path: './config.env' });
 
@@ -29,10 +30,42 @@ mongoose
   )
   .catch(err => console.log(err));
 
-// console.log(app.get('env')); //write environment variables on terminal
-// console.log(process.env); // write environment variables on terminal
+//READ JSON FILE
+const tours = JSON.parse(
+  fs.readFileSync(
+    `${__dirname}/tours-simple.json`,
+    'utf-8'
+  )
+);
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+//IMPORT DATA INTO DB
+const importData = async () => {
+  try {
+    await Tour.create(tours);
+    console.log('Data successfully loaded!');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
+
+//DELETE ALL DATA FROM DB:
+const deleteData = async () => {
+  try {
+    await Tour.deleteMany();
+    console.log('Data successfully deleted!');
+  } catch (error) {
+    console.log(error);
+  }
+  process.exit();
+};
+
+//INFO: process.argv[2] is the third argument.
+//INFO: it can be --import or --delete
+if (process.argv[2] === '--import') {
+  importData();
+} else if (process.argv[2] === '--delete') {
+  deleteData();
+}
+
+console.log(process.argv);
