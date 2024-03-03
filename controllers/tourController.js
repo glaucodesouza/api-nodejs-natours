@@ -6,7 +6,7 @@ exports.getAllTours = async (req, res) => {
   try {
     // BUILD QUERY
 
-    //1) Filtering
+    //1A) Filtering
     const queryObj = { ...req.query };
     const excludedFields = [
       'page',
@@ -18,7 +18,7 @@ exports.getAllTours = async (req, res) => {
       element => delete queryObj[element]
     );
 
-    //2) Advanced filtering
+    //1B) Advanced filtering
     let queryStr = JSON.stringify(queryObj);
 
     //INFO: make an advanced query for MongoDB
@@ -31,16 +31,25 @@ exports.getAllTours = async (req, res) => {
       /\b(gte|gt|lte|lt)\b/g,
       match => `$${match}` //INFO: $ is to concatenate $ in the init of matched word in variable ${match}.
     );
-    console.log(JSON.parse(queryStr));
+    // console.log(JSON.parse(queryStr));
 
     // console.log(req.query);
     // { difficulty: 'easy', duration: { $gte: '5' } } //INFO: MongoDB use $
     // { difficulty: 'easy', duration: { gte: '5' } }
     //gte, gt, lte, lt
 
-    const query = Tour.find(
-      JSON.parse(queryStr)
-    ); //INFO: this command is to read all tours from table
+    let query = Tour.find(JSON.parse(queryStr)); //INFO: this command is to read all tours from table
+
+    //2) Sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort
+        .split(',')
+        .join(' ');
+      query = query.sort(sortBy);
+    } else {
+      // If user do not use sort, lets sort by createdAt descending (using -)
+      query = query.sort('-createdAt');
+    }
 
     // EXECUTE QUERY
     const tours = await query;
