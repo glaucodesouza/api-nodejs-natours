@@ -61,14 +61,27 @@ exports.getAllTours = async (req, res) => {
       query = query.select('-__v'); //INFO: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
     }
 
+    //4) Pagination
+
+    // * 1 to convert string to a number
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+
+    // ?limit=10&page=2, 1-10, page 1, 11-20, page 2, 21-30, page 3
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments(); // wait a response of a promise
+      if (skip >= numTours) {
+        throw new Error(
+          'This page does not exist'
+        );
+      }
+    }
+
     // EXECUTE QUERY
     const tours = await query;
-
-    // const query = await Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
 
     // SEND RESPONSE TO USER IN FRONTEND
     res.status(200).json({
