@@ -1,6 +1,6 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv'); //INFO: need it for having environment variables for connections
+const dotenv = require('dotenv'); //NOTE: need it for having environment variables for connections
 const Tour = require('./../../models/tourModel');
 
 dotenv.config({ path: './config.env' });
@@ -60,8 +60,8 @@ const deleteData = async () => {
   process.exit();
 };
 
-//INFO: process.argv[2] is the third argument.
-//INFO: it can be --import or --delete
+//NOTE: process.argv[2] is the third argument.
+//NOTE: it can be --import or --delete
 if (process.argv[2] === '--import') {
   importData();
 } else if (process.argv[2] === '--delete') {

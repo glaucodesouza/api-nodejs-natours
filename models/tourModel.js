@@ -62,11 +62,11 @@ const tourSchema = new mongoose.Schema({
       'A tour must have a cover image'
     ]
   },
-  images: [String], //INFO: an array of images
+  images: [String], //NOTE: an array of images
   createdAt: {
     type: Date,
-    default: Date.now(), //INFO: timestamp in miliseconds, immediataly converty to day state
-    select: false //INFO:remove from selection, so we do not pass it to user in frontend
+    default: Date.now(), //NOTE: timestamp in miliseconds, immediataly converty to day state
+    select: false //NOTE:remove from selection, so we do not pass it to user in frontend
   },
   startDates: [Date]
 });

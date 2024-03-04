@@ -21,24 +21,24 @@ exports.getAllTours = async (req, res) => {
     //1B) Advanced filtering
     let queryStr = JSON.stringify(queryObj);
 
-    //INFO: make an advanced query for MongoDB
+    //NOTE: make an advanced query for MongoDB
     // we need to concatenate a $ in thes words: gte|gt|lte|lt
-    //INFO: regular expression meaning, for replacing gte|gt|lte|lt for $gte|$gt|$lte|$lt:
+    //NOTE: regular expression meaning, for replacing gte|gt|lte|lt for $gte|$gt|$lte|$lt:
     // \b means exact to match word,
     // g means can have repeated words in string,
     // | means or operator.
     queryStr = queryStr.replace(
       /\b(gte|gt|lte|lt)\b/g,
-      match => `$${match}` //INFO: $ is to concatenate $ in the init of matched word in variable ${match}.
+      match => `$${match}` //NOTE: $ is to concatenate $ in the init of matched word in variable ${match}.
     );
     // console.log(JSON.parse(queryStr));
 
     // console.log(req.query);
-    // { difficulty: 'easy', duration: { $gte: '5' } } //INFO: MongoDB use $
+    // { difficulty: 'easy', duration: { $gte: '5' } } //NOTE: MongoDB use $
     // { difficulty: 'easy', duration: { gte: '5' } }
     //gte, gt, lte, lt
 
-    let query = Tour.find(JSON.parse(queryStr)); //INFO: this command is to read all tours from table
+    let query = Tour.find(JSON.parse(queryStr)); //NOTE: this command is to read all tours from table
 
     //2) Sorting
     if (req.query.sort) {
@@ -58,7 +58,7 @@ exports.getAllTours = async (req, res) => {
         .join(' ');
       query = query.select(fields);
     } else {
-      query = query.select('-__v'); //INFO: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
+      query = query.select('-__v'); //NOTE: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
     }
 
     //4) Pagination
@@ -102,9 +102,9 @@ exports.getAllTours = async (req, res) => {
 exports.getTour = async (req, res) => {
   try {
     const tour = await Tour.findById(
-      req.params.id //INFO: 1)this id come from route file configuration and it will be informed in URL id parameter (.route(/:id))
+      req.params.id //NOTE: 1)this id come from route file configuration and it will be informed in URL id parameter (.route(/:id))
     );
-    // INFO: 2) For one, you could use: Tour.findOne({ _id: req.params.id })
+    // NOTE: 2) For one, you could use: Tour.findOne({ _id: req.params.id })
     res.status(200).json({
       status: 'success',
       data: {
@@ -139,12 +139,12 @@ exports.createTour = async (req, res) => {
 };
 
 // PATCH (Update Tour)
-//INFO:
+//NOTE:
 // this function works only for PATCH method.
 // do not work for PUT method because we coauld fill up all fields when calling it.
 exports.updateTour = async (req, res) => {
   try {
-    //INFO: lets use a mongose method (findByIdAndUpdate)
+    //NOTE: lets use a mongose method (findByIdAndUpdate)
     // which returns a mongose Query object.
     const tour = await Tour.findByIdAndUpdate(
       req.params.id,
@@ -161,7 +161,7 @@ exports.updateTour = async (req, res) => {
       }
     });
 
-    //INFO: we also could use tour: tour
+    //NOTE: we also could use tour: tour
     //but we can hide it because it has the same name (tour).
     // res.status(200).json({
     //   status: 'success',
