@@ -1,3 +1,16 @@
+/*
+NOTE:
+So, the APIFeatures class expects a mongoose query object as an input. The way we create a query object is by creating a query with Tour.find(), but not executing the query right away, so not using await on it (in case we're using async/await like we do in the course).
+Again, by doing this, we end up with a query object onto which we can then chain other methods, such as sort, or another find, as you posted in your example:
+this.query.find(JSON.parse(queryStr))
+Keep in mind that here, inside the class, this.query is the query object we created in the beginning, so it's like having:
+Tour.find().find(JSON.parse(queryStr))
+And yes, that is totally acceptable. Again, because the query has not yet executed, it didn't return the actual results yet. That's what we do in the end, which is the reason why in the end we have to use
+const tours = await features.query;
+
+Does it make more sense now?
+Jonas
+*/
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
