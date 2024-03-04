@@ -1,6 +1,16 @@
 // const fs = require('fs');
 const Tour = require('./../models/tourModel');
 
+//NOTE:
+// next here is to call next middleware
+exports.aliasTopTours = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields =
+    'name,price,ratirngsAverage, summary,difficulty';
+  next(); //NOTE: this middleware needs next() to move to next and do not get stuck here...
+};
+
 // GET Tours (Get all tours)
 exports.getAllTours = async (req, res) => {
   try {
