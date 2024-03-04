@@ -1,5 +1,6 @@
 // const fs = require('fs');
 const Tour = require('./../models/tourModel');
+const APIFeatures = require('./../utils/apiFeatures'); //NOTE: this is a class with features
 
 //NOTE:
 // next here is to call next middleware
@@ -14,84 +15,93 @@ exports.aliasTopTours = (req, res, next) => {
 // GET Tours (Get all tours)
 exports.getAllTours = async (req, res) => {
   try {
+    //NOTE: this comented lines bellow were placed in the new class APIFeatures above!!!
+    //NOTE: because we can do filter, limit, sort, query there.
     // BUILD QUERY
+    // //1A) Filtering
+    // const queryObj = { ...req.query };
+    // const excludedFields = [
+    //   'page',
+    //   'sort',
+    //   'limit',
+    //   'fields'
+    // ];
+    // excludedFields.forEach(
+    //   element => delete queryObj[element]
+    // );
 
-    //1A) Filtering
-    const queryObj = { ...req.query };
-    const excludedFields = [
-      'page',
-      'sort',
-      'limit',
-      'fields'
-    ];
-    excludedFields.forEach(
-      element => delete queryObj[element]
-    );
+    // //1B) Advanced filtering
+    // let queryStr = JSON.stringify(queryObj);
 
-    //1B) Advanced filtering
-    let queryStr = JSON.stringify(queryObj);
+    // //NOTE: make an advanced query for MongoDB
+    // // we need to concatenate a $ in thes words: gte|gt|lte|lt
+    // //NOTE: regular expression meaning, for replacing gte|gt|lte|lt for $gte|$gt|$lte|$lt:
+    // // \b means exact to match word,
+    // // g means can have repeated words in string,
+    // // | means or operator.
+    // queryStr = queryStr.replace(
+    //   /\b(gte|gt|lte|lt)\b/g,
+    //   match => `$${match}` //NOTE: $ is to concatenate $ in the init of matched word in variable ${match}.
+    // );
+    // // console.log(JSON.parse(queryStr));
 
-    //NOTE: make an advanced query for MongoDB
-    // we need to concatenate a $ in thes words: gte|gt|lte|lt
-    //NOTE: regular expression meaning, for replacing gte|gt|lte|lt for $gte|$gt|$lte|$lt:
-    // \b means exact to match word,
-    // g means can have repeated words in string,
-    // | means or operator.
-    queryStr = queryStr.replace(
-      /\b(gte|gt|lte|lt)\b/g,
-      match => `$${match}` //NOTE: $ is to concatenate $ in the init of matched word in variable ${match}.
-    );
-    // console.log(JSON.parse(queryStr));
+    // // console.log(req.query);
+    // // { difficulty: 'easy', duration: { $gte: '5' } } //NOTE: MongoDB use $
+    // // { difficulty: 'easy', duration: { gte: '5' } }
+    // //gte, gt, lte, lt
 
-    // console.log(req.query);
-    // { difficulty: 'easy', duration: { $gte: '5' } } //NOTE: MongoDB use $
-    // { difficulty: 'easy', duration: { gte: '5' } }
-    //gte, gt, lte, lt
-
-    let query = Tour.find(JSON.parse(queryStr)); //NOTE: this command is to read all tours from table
+    // let query = Tour.find(JSON.parse(queryStr)); //NOTE: this command is to read all tours from table
 
     //2) Sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort
-        .split(',')
-        .join(' ');
-      query = query.sort(sortBy);
-    } else {
-      // If user do not use sort, lets sort by createdAt descending (using -)
-      query = query.sort('-createdAt');
-    }
+    // if (req.query.sort) {
+    //   const sortBy = req.query.sort
+    //     .split(',')
+    //     .join(' ');
+    //   query = query.sort(sortBy);
+    // } else {
+    //   // If user do not use sort, lets sort by createdAt descending (using -)
+    //   query = query.sort('-createdAt');
+    // }
 
     //3) Field limiting
-    if (req.query.fields) {
-      const fields = req.query.fields
-        .split(',')
-        .join(' ');
-      query = query.select(fields);
-    } else {
-      query = query.select('-__v'); //NOTE: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
-    }
+    // if (req.query.fields) {
+    //   const fields = req.query.fields
+    //     .split(',')
+    //     .join(' ');
+    //   query = query.select(fields);
+    // } else {
+    //   query = query.select('-__v'); //NOTE: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
+    // }
 
     //4) Pagination
 
-    // * 1 to convert string to a number
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 100;
-    const skip = (page - 1) * limit;
+    // // * 1 to convert string to a number
+    // const page = req.query.page * 1 || 1;
+    // const limit = req.query.limit * 1 || 100;
+    // const skip = (page - 1) * limit;
 
-    // ?limit=10&page=2, 1-10, page 1, 11-20, page 2, 21-30, page 3
-    query = query.skip(skip).limit(limit);
+    // // ?limit=10&page=2, 1-10, page 1, 11-20, page 2, 21-30, page 3
+    // query = query.skip(skip).limit(limit);
 
-    if (req.query.page) {
-      const numTours = await Tour.countDocuments(); // wait a response of a promise
-      if (skip >= numTours) {
-        throw new Error( // this is go to catch bellow...
-          'This page does not exist'
-        );
-      }
-    }
+    // if (req.query.page) {
+    //   const numTours = await Tour.countDocuments(); // wait a response of a promise
+    //   if (skip >= numTours) {
+    //     throw new Error( // this is go to catch bellow...
+    //       'This page does not exist'
+    //     );
+    //   }
+    // }
 
     // EXECUTE QUERY
-    const tours = await query;
+    const features = new APIFeatures( //NOTE: this is a class with features
+      Tour.find(),
+      req.query //NOTE: query comes from express
+    )
+      .filter() //NOTE: it is a feature from class APIFeatures
+      .sort() //NOTE: it is a feature from class APIFeatures
+      .limitFields() //NOTE: it is a feature from class APIFeatures
+      .paginate(); //NOTE: it is a feature from class APIFeatures
+    const tours = await features.query; //NOTE: this query will be stored in features.query
 
     // SEND RESPONSE TO USER IN FRONTEND
     res.status(200).json({
