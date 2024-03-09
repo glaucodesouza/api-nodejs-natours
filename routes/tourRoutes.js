@@ -12,6 +12,10 @@ router
     tourController.getAllTours
   );
 
+router
+  .route('/tour-stats')
+  .get(tourController.getTourStats);
+
 // NOTE:
 // Commented out because it was for local testing purposes
 // router.param('id', tourController.checkID); //just for Get, Update, Delete methods
