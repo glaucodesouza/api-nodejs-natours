@@ -214,6 +214,7 @@ exports.deleteTour = async (req, res) => {
 };
 
 // NOTE: Use Aggregation Pipeline
+// NOTE: Using MongoDB operators $avg, $min, $max, $sum, $toUpper
 exports.getTourStats = async (req, res) => {
   try {
     //NOTE: only works with await Promise
@@ -225,7 +226,10 @@ exports.getTourStats = async (req, res) => {
       },
       {
         $group: {
-          _id: '$difficulty',
+          // _id: '$difficulty',
+          // _id: '$difficulty',
+          // _id: '$ratingsAverage',
+          _id: { $toUpper: '$difficulty' },
           numTours: { $sum: 1 },
           numRatings: {
             $sum: '$ratingsQuantity'
@@ -237,6 +241,15 @@ exports.getTourStats = async (req, res) => {
           minPrice: { $min: '$price' },
           maxPrice: { $max: '$price' }
         }
+      },
+      {
+        //NOTE: sort the results
+        //NOTE: 1=ascending, 2=descending
+        $sort: { avgPrice: 1 }
+      },
+      {
+        //NOTE: we can use match repeated times
+        $match: { _id: { $ne: 'EASY' } }
       }
     ]);
 
