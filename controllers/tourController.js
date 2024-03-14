@@ -1,22 +1,22 @@
 // const fs = require('fs');
 const Tour = require('./../models/tourModel');
-const APIFeatures = require('./../utils/apiFeatures'); //NOTE: this is a class with features
+const APIFeatures = require('./../utils/apiFeatures'); //obs: this is a class with features
 
-//NOTE:
+//obs:
 // next here is to call next middleware
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = '-ratingsAverage,price';
   req.query.fields =
     'name,price,ratirngsAverage, summary,difficulty';
-  next(); //NOTE: this middleware needs next() to move to next and do not get stuck here...
+  next(); //obs: this middleware needs next() to move to next and do not get stuck here...
 };
 
 // GET Tours (Get all tours)
 exports.getAllTours = async (req, res) => {
   try {
-    //NOTE: this comented lines bellow were placed in the new class APIFeatures above!!!
-    //NOTE: because we can do filter, limit, sort, query there.
+    //obs: this comented lines bellow were placed in the new class APIFeatures above!!!
+    //obs: because we can do filter, limit, sort, query there.
     // BUILD QUERY
     // //1A) Filtering
     // const queryObj = { ...req.query };
@@ -33,24 +33,24 @@ exports.getAllTours = async (req, res) => {
     // //1B) Advanced filtering
     // let queryStr = JSON.stringify(queryObj);
 
-    // //NOTE: make an advanced query for MongoDB
+    // //obs: make an advanced query for MongoDB
     // // we need to concatenate a $ in thes words: gte|gt|lte|lt
-    // //NOTE: regular expression meaning, for replacing gte|gt|lte|lt for $gte|$gt|$lte|$lt:
+    // //obs: regular expression meaning, for replacing gte|gt|lte|lt for $gte|$gt|$lte|$lt:
     // // \b means exact to match word,
     // // g means can have repeated words in string,
     // // | means or operator.
     // queryStr = queryStr.replace(
     //   /\b(gte|gt|lte|lt)\b/g,
-    //   match => `$${match}` //NOTE: $ is to concatenate $ in the init of matched word in variable ${match}.
+    //   match => `$${match}` //obs: $ is to concatenate $ in the init of matched word in variable ${match}.
     // );
     // // console.log(JSON.parse(queryStr));
 
     // // console.log(req.query);
-    // // { difficulty: 'easy', duration: { $gte: '5' } } //NOTE: MongoDB use $
+    // // { difficulty: 'easy', duration: { $gte: '5' } } //obs: MongoDB use $
     // // { difficulty: 'easy', duration: { gte: '5' } }
     // //gte, gt, lte, lt
 
-    // let query = Tour.find(JSON.parse(queryStr)); //NOTE: this command is to read all tours from table
+    // let query = Tour.find(JSON.parse(queryStr)); //obs: this command is to read all tours from table
 
     //2) Sorting
     // if (req.query.sort) {
@@ -70,7 +70,7 @@ exports.getAllTours = async (req, res) => {
     //     .join(' ');
     //   query = query.select(fields);
     // } else {
-    //   query = query.select('-__v'); //NOTE: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
+    //   query = query.select('-__v'); //obs: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
     // }
 
     //4) Pagination
@@ -93,15 +93,15 @@ exports.getAllTours = async (req, res) => {
     // }
 
     // EXECUTE QUERY
-    const features = new APIFeatures( //NOTE: this is a class with features
+    const features = new APIFeatures( //obs: this is a class with features
       Tour.find(),
-      req.query //NOTE: query comes from express
+      req.query //obs: query comes from express
     )
-      .filter() //NOTE: it is a feature from class APIFeatures
-      .sort() //NOTE: it is a feature from class APIFeatures
-      .limitFields() //NOTE: it is a feature from class APIFeatures
-      .paginate(); //NOTE: it is a feature from class APIFeatures
-    const tours = await features.query; //NOTE: this query will be stored in features.query
+      .filter() //obs: it is a feature from class APIFeatures
+      .sort() //obs: it is a feature from class APIFeatures
+      .limitFields() //obs: it is a feature from class APIFeatures
+      .paginate(); //obs: it is a feature from class APIFeatures
+    const tours = await features.query; //obs: this query will be stored in features.query
 
     // SEND RESPONSE TO USER IN FRONTEND
     res.status(200).json({
@@ -122,9 +122,9 @@ exports.getAllTours = async (req, res) => {
 exports.getTour = async (req, res) => {
   try {
     const tour = await Tour.findById(
-      req.params.id //NOTE: 1)this id come from route file configuration and it will be informed in URL id parameter (.route(/:id))
+      req.params.id //obs: 1)this id come from route file configuration and it will be informed in URL id parameter (.route(/:id))
     );
-    // NOTE: 2) For one, you could use: Tour.findOne({ _id: req.params.id })
+    // obs: 2) For one, you could use: Tour.findOne({ _id: req.params.id })
     res.status(200).json({
       status: 'success',
       data: {
@@ -159,12 +159,12 @@ exports.createTour = async (req, res) => {
 };
 
 // PATCH (Update Tour)
-//NOTE:
+//obs:
 // this function works only for PATCH method.
 // do not work for PUT method because we coauld fill up all fields when calling it.
 exports.updateTour = async (req, res) => {
   try {
-    //NOTE: lets use a mongose method (findByIdAndUpdate)
+    //obs: lets use a mongose method (findByIdAndUpdate)
     // which returns a mongose Query object.
     const tour = await Tour.findByIdAndUpdate(
       req.params.id,
@@ -181,7 +181,7 @@ exports.updateTour = async (req, res) => {
       }
     });
 
-    //NOTE: we also could use tour: tour
+    //obs: we also could use tour: tour
     //but we can hide it because it has the same name (tour).
     // res.status(200).json({
     //   status: 'success',
@@ -213,11 +213,11 @@ exports.deleteTour = async (req, res) => {
   }
 };
 
-// NOTE: Use Aggregation Pipeline
-// NOTE: Using MongoDB operators $avg, $min, $max, $sum, $toUpper
+// obs: Use Aggregation Pipeline
+// obs: Using MongoDB operators $avg, $min, $max, $sum, $toUpper
 exports.getTourStats = async (req, res) => {
   try {
-    //NOTE: only works with await Promise
+    //obs: only works with await Promise
     const stats = await Tour.aggregate([
       {
         $match: {
@@ -243,12 +243,12 @@ exports.getTourStats = async (req, res) => {
         }
       },
       {
-        //NOTE: sort the results
-        //NOTE: 1=ascending, 2=descending
+        //obs: sort the results
+        //obs: 1=ascending, 2=descending
         $sort: { avgPrice: 1 }
       },
       {
-        //NOTE: we can use match repeated times
+        //obs: we can use match repeated times
         $match: { _id: { $ne: 'EASY' } }
       }
     ]);

@@ -1,5 +1,5 @@
 /*
-NOTE:
+obs:
 So, the APIFeatures class expects a mongoose query object as an input. The way we create a query object is by creating a query with Tour.find(), but not executing the query right away, so not using await on it (in case we're using async/await like we do in the course).
 Again, by doing this, we end up with a query object onto which we can then chain other methods, such as sort, or another find, as you posted in your example:
 this.query.find(JSON.parse(queryStr))
@@ -33,12 +33,12 @@ class APIFeatures {
 
     queryStr = queryStr.replace(
       /\b(gte|gt|lte|lt)\b/g,
-      match => `$${match}` //NOTE: $ is to concatenate $ in the init of matched word in variable ${match}.
+      match => `$${match}` //obs: $ is to concatenate $ in the init of matched word in variable ${match}.
     );
 
     this.query = this.query.find(
       JSON.parse(queryStr)
-    ); //NOTE: this command is to read all tours from table
+    ); //obs: this command is to read all tours from table
 
     return this;
   }
@@ -66,7 +66,7 @@ class APIFeatures {
         .join(' ');
       this.query = this.query.select(fields);
     } else {
-      this.query = this.query.select('-__v'); //NOTE: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
+      this.query = this.query.select('-__v'); //obs: -: minus here means except __v which is a standard field for MongoDB and we can not remove.
     }
     return this;
   }

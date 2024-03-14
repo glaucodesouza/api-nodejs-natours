@@ -16,7 +16,7 @@ router
   .route('/tour-stats')
   .get(tourController.getTourStats);
 
-// NOTE:
+// obs:
 // Commented out because it was for local testing purposes
 // router.param('id', tourController.checkID); //just for Get, Update, Delete methods
 

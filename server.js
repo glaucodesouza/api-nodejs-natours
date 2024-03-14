@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const dotenv = require('dotenv'); //NOTE: need it for having environment variables for connections
+const dotenv = require('dotenv'); //obs: need it for having environment variables for connections
 
 dotenv.config({ path: './config.env' });
 const app = require('./app');
