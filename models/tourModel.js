@@ -137,7 +137,18 @@ tourSchema.post(/^find/, function(docs, next) {
     `Query took ${Date.now() -
       this.start} milliseconds`
   );
-  console.log(docs);
+  next();
+});
+
+// Aggregation Middleware
+tourSchema.pre('aggregate', function(next) {
+  //obs: add in last position of array
+  this.pipeline().unshift({
+    $match: {
+      secretTour: { $ne: true }
+    }
+  });
+  console.log(this.pipeline()); //obs: this points to aggregation object
   next();
 });
 
