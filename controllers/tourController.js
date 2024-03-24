@@ -132,10 +132,10 @@ exports.getTour = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(404).json({
-      status: 'fail',
-      message: error
-    });
+    console.log(error);
+    res
+      .status(404)
+      .json({ status: 'fail', message: error });
   }
 };
 
@@ -151,10 +151,9 @@ exports.createTour = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(400).json({
-      status: 'fail',
-      message: error
-    });
+    res
+      .status(404)
+      .json({ status: 'fail', message: error });
   }
 };
 
@@ -190,10 +189,9 @@ exports.updateTour = async (req, res) => {
     //   }
     // });
   } catch (error) {
-    res.status(400).json({
-      status: 'fail',
-      message: error
-    });
+    res
+      .status(404)
+      .json({ status: 'fail', message: error });
   }
 };
 
@@ -206,10 +204,9 @@ exports.deleteTour = async (req, res) => {
       data: null
     });
   } catch (error) {
-    res.status(404).json({
-      status: 'fail',
-      message: error
-    });
+    res
+      .status(404)
+      .json({ status: 'fail', message: error });
   }
 };
 
@@ -260,10 +257,9 @@ exports.getTourStats = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(404).json({
-      status: 'fail',
-      message: error
-    });
+    res
+      .status(404)
+      .json({ status: 'fail', message: error });
   }
 };
 
@@ -315,10 +311,9 @@ exports.getMonthlyPlan = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(404).json({
-      status: 'fail',
-      message: error
-    });
+    res
+      .status(404)
+      .json({ status: 'fail', message: error });
   }
 };
 // // const fs = require('fs');
