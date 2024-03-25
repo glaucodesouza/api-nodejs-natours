@@ -34,6 +34,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
+//GLOBAL Handler middleware for unkown routes
 //Handle all routes and urls (get, post, put, delete, etc)
 //all=all the verbs create, post, deletc, etc
 //'*' means all the routes /api/v1/tours, etc.
@@ -42,9 +43,28 @@ app.use('/api/v1/users', userRouter);
 //IT WILL ONLY give this error, because executions reached this function here.
 //SO it is because it did not find another correct route.
 app.all('*', (req, res, next) => {
-  res.status(404).json({
-    status: 'fail',
-    message: `Can't find ${req.originalUrl} on this server!`
+  // res.status(404).json({
+  //   status: 'fail',
+  //   message: `Can't find ${req.originalUrl} on this server!`
+  // });
+
+  const error = new Error(
+    `Can't find ${req.originalUrl} on this server!`
+  );
+  error.status = 'fail';
+  error.statusCode = 404;
+
+  next(error);
+});
+
+app.use((error, req, res, next) => {
+  //send response to the client
+  error.statusCode = error.statusCode || 500;
+  error.status = error.status || 'error';
+
+  res.status(error.statusCode).json({
+    status: error.status,
+    message: error.message
   });
 });
 
